@@ -10,17 +10,9 @@ warnings.filterwarnings("ignore")
 
 sc = SparkContext()
 spark = SparkSession(sc)
-streets = sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv').mapPartitionsWithIndex(processstreet)
-street = spark.createDataFrame(streets, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
-street=street.toPandas()
-
-hyphen=['l_low_hn','l_high_hn','r_low_hn','r_high_hn']
-for i in hyphen:
-    street[i] = street[i].apply(lambda x:tuple(map(int, x.split('-'))))
-set2=set(street['physicalid'])
 
 
-def processstreet(pid,records):
+def processStreet(pid,records):
     import csv
     import re
     
@@ -34,6 +26,31 @@ def processstreet(pid,records):
                 
        
         yield (row[0],row[28],row[10],row[13],row[2],row[3],row[4],row[5])
+streets=sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv')
+street=streets.mapPartitionsWithIndex(processStreet)
+street=spark.createDataFrame(streets, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
+street=street.toPandas()
+
+hyphen=['l_low_hn','l_high_hn','r_low_hn','r_high_hn']
+for i in hyphen:
+    street[i] = street[i].apply(lambda x:tuple(map(int, x.split('-'))))
+set2=set(street['physicalid'])
+
+
+# def processstreet(pid,records):
+#     import csv
+#     import re
+    
+#     if pid==0:
+#         next(records)
+#     reader = csv.reader(records)
+#     for row in reader:
+#         if row[2]=='' or row[3]=='' or row[4]=='' or row[5]=='' or row[10]=='' or row[13]=='' or row[28]=='':
+#             continue
+#         row[13]=int(row[13])
+                
+       
+#         yield (row[0],row[28],row[10],row[13],row[2],row[3],row[4],row[5])
         
 def processViolation(pid,records):
     import csv
