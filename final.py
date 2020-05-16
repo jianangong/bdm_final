@@ -28,7 +28,7 @@ def processStreet(pid,records):
         yield (row[0],row[28],row[10],row[13],row[2],row[3],row[4],row[5])
 streets=sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv')
 street=streets.mapPartitionsWithIndex(processStreet)
-street=spark.createDataFrame(streets, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
+street=spark.createDataFrame(street, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
 street=street.toPandas()
 
 hyphen=['l_low_hn','l_high_hn','r_low_hn','r_high_hn']
