@@ -8,7 +8,7 @@ from pyspark.sql.session import SparkSession
 import warnings
 warnings.filterwarnings("ignore")
 
-
+sc = SparkContext()
 spark = SparkSession(sc)
 streets = sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv').mapPartitionsWithIndex(processstreet)
 street = spark.createDataFrame(streets, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
@@ -111,7 +111,7 @@ def takeSecond(elem):
 if __name__=='__main__':
             
     import os
-    sc = SparkContext()
+    
     file_paths_raw = []
     for dirname, _, filenames in os.walk('hdfs:///tmp/bdm/nyc_parking_violations/'):
         for filename in filenames:
