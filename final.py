@@ -4,25 +4,37 @@ import pandas as pd
 import geopandas as gpd
 import fiona
 import fiona.crs
+from pyspark.sql.session import SparkSession
 import warnings
 warnings.filterwarnings("ignore")
-from hdfs import InsecureClient
 
 
-with client_hdfs.read('hdfs:///tmp/bdm/nyc_cscl.csv', encoding = 'utf-8') as reader:
-    streets = gpd.read_csv(reader).to_crs(fiona.crs.from_epsg(2263))
-# streets = gpd.read_file('hdfs:///tmp/bdm/nyc_cscl.csv').to_crs(fiona.crs.from_epsg(2263))
-fields=['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn']
-street=streets[fields]
-street['borocode'] = street['borocode'].astype(int)
-street.dropna(inplace=True)
+spark = SparkSession(sc)
+streets = sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv').mapPartitionsWithIndex(processstreet)
+street = spark.createDataFrame(streets, ['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn'])
+street=street.toPandas()
+
 hyphen=['l_low_hn','l_high_hn','r_low_hn','r_high_hn']
 for i in hyphen:
     street[i] = street[i].apply(lambda x:tuple(map(int, x.split('-'))))
 set2=set(street['physicalid'])
 
 
-
+def processstreet(pid,records):
+    import csv
+    import re
+    
+    if pid==0:
+        next(records)
+    reader = csv.reader(records)
+    for row in reader:
+        if row[2]=='' or row[3]=='' or row[4]=='' or row[5]=='' or row[10]=='' or row[13]=='' or row[28]=='':
+            continue
+        row[13]=int(row[13])
+                
+       
+        yield (row[0],row[28],row[10],row[13],row[2],row[3],row[4],row[5])
+        
 def processViolation(pid,records):
     import csv
     import re
