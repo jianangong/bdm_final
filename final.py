@@ -6,10 +6,12 @@ import fiona
 import fiona.crs
 import warnings
 warnings.filterwarnings("ignore")
+from hdfs import InsecureClient
 
 
-
-streets = gpd.read_file('hdfs:///tmp/bdm/nyc_cscl.csv').to_crs(fiona.crs.from_epsg(2263))
+with client_hdfs.read('hdfs:///tmp/bdm/nyc_cscl.csv', encoding = 'utf-8') as reader:
+    streets = gpd.read_csv(reader).to_crs(fiona.crs.from_epsg(2263))
+# streets = gpd.read_file('hdfs:///tmp/bdm/nyc_cscl.csv').to_crs(fiona.crs.from_epsg(2263))
 fields=['physicalid','full_stree','st_label','borocode','l_low_hn','l_high_hn','r_low_hn','r_high_hn']
 street=streets[fields]
 street['borocode'] = street['borocode'].astype(int)
