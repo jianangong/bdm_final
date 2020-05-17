@@ -28,7 +28,7 @@ def findzone(p, indexr, tract):
     match_tract = indexr.intersection((p.x,p.y,p.x,p.y))
 
     for idx in match_tract:
-        if tract.geometry[idx].contains(p):
+        if tract.geometry[idx].buffer(0).contains(p):
             tract_name=tract.plctract10[idx]
             tract_pop=tract.plctrpop10[idx]
             return (tract_name,tract_pop)
@@ -70,8 +70,8 @@ def processpop(pid,records):
             p = geom.Point(proj(float(row[2]),float(row[1])))
             if p.is_valid:
                 match = findzone(p,indexr,tract)
-                if match:
-                    counts[match] = counts.get(match,0) + 1 
+            if match:
+                counts[match] = counts.get(match,0) + 1 
     return counts.items()
  
 
