@@ -82,4 +82,5 @@ if __name__=='__main__':
     tweet = sc.textFile(tweetdata).cache()
     counts = tweet.mapPartitionsWithIndex(processpop) \
             .reduceByKey(lambda x,y: x+y)\
-             .map(lambda x:(x[0][0],x[1]/x[0][1])).saveAsTextFile(output)
+             .map(lambda x:(x[0][0],x[1]/x[0][1]))\
+             .sortByKey().saveAsTextFile(output)
