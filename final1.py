@@ -5,6 +5,7 @@ import geopandas as gpd
 from pyspark.sql.session import SparkSession
 from pyspark import SparkContext
 import sys
+import time
 
 def processStreet(pid,records):
     import csv
@@ -124,6 +125,7 @@ def coef_ols(y, x=list(range(2015,2020))):
     return coef      
         
 if __name__ == "__main__":
+    start_time = time.time()
     output = sys.argv[1]
     sc = SparkContext()
     spark = SparkSession(sc)
@@ -147,6 +149,8 @@ if __name__ == "__main__":
             .sortByKey() \
             .map(lambda x: ((x[0],) + x[1]))\
             .saveAsTextFile(output)
+    
+    print('total running time : {} seconds'.format(time.time()-start_time))
 
 
    
