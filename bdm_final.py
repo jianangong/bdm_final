@@ -130,7 +130,7 @@ if __name__ == "__main__":
     vio_stre.rdd.map(lambda x: ((x[0], x[1]), x[2])) \
             .mapPartitions(breaktoyear) \
             .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4])) \
-            .mapValues(lambda x: x + (coef_ols(y=list(x)),)) \
             .sortByKey() \
+            .mapValues(lambda y: y + (coef_ols(y=list(y)),)) \
             .map(lambda x: ((x[0],) + x[1]))\
             .saveAsTextFile(output)
