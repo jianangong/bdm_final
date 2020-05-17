@@ -12,6 +12,7 @@ from pyspark import SparkContext
 address1=''
 
 def getdict():
+    import csv
     wordcount={}
     keyword=[]
     with open('drug_illegal.txt') as file:
@@ -22,7 +23,7 @@ def getdict():
         reader = csv.reader(file)
         for row in reader:
             keyword.append(row[0])
-    with open(address1) as file:
+    with open(tweetdata) as file:
         reader = csv.reader(file,delimiter='|')      
         for row in reader:
             if len(row) < 7:
@@ -79,7 +80,7 @@ def processwords(pid,records):
 if __name__ == "__main__":
     output=sys.argv[2]
     tweetdata=sys.argv[1]
-    address1= sys.argv[1]
+
     
     
     
