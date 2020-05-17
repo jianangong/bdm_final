@@ -9,7 +9,8 @@ import pandas as pd
 import geopandas as gpd
 from pyspark import SparkContext
 
-address1=''
+
+tweetdata=sys.argv[1]
 
 def getdict():
     import csv
@@ -79,7 +80,7 @@ def processwords(pid,records):
     
 if __name__ == "__main__":
     output=sys.argv[2]
-    tweetdata=sys.argv[1]
+    
 
     
     
