@@ -52,11 +52,11 @@ def processwords(pid,records):
     counts={}
     keyword=[]
 
-    with open('illegal.txt') as file:
+    with open('drug_illegal.txt') as file:
         reader = csv.reader(file)
         for row in reader:
             keyword.append(row[0])
-    with open('sched2.txt') as file:
+    with open('drug_sched2.txt') as file:
         reader = csv.reader(file)
         for row in reader:
             keyword.append(row[0])
