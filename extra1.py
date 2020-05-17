@@ -46,7 +46,7 @@ def processpop(pid,records):
 #         next(records)
  
     counts={}
-    keyword=[]
+    keyword=[]      # to record all the drug related words
     with open('drug_illegal.txt') as file:
         reader = csv.reader(file)
         for row in reader:
@@ -62,7 +62,7 @@ def processpop(pid,records):
         if  row[1]=='' or row[2]=='' or row[1]!=row[1] or row[2]!=row[2]:
              continue
         flag=0
-        for i in keyword:
+        for i in keyword:            #check whether the tweet is drug related,search all the keywords. Once there is a match,flag=1
             if i in row[6]:
                 flag=1
                 break
