@@ -50,9 +50,18 @@ def processwords(pid,records):
     
     worddict=getdict()
     counts={}
-    reader = csv.reader(records,delimiter='|')   
-    
-    
+    keyword=[]
+
+    with open('illegal.txt') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            keyword.append(row[0])
+    with open('sched2.txt') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            keyword.append(row[0])
+            
+    reader = csv.reader(records,delimiter='|') 
     for row in reader:
         if len(row) < 7:
             continue
