@@ -68,9 +68,10 @@ def processpop(pid,records):
                 break
         if(flag==1):
             p = geom.Point(proj(float(row[2]),float(row[1])))
-            match = findzone(p,indexr,tract)
-            if match:
-                counts[match] = counts.get(match,0) + 1 
+            if p.is_valid:
+                match = findzone(p,indexr,tract)
+                if match:
+                    counts[match] = counts.get(match,0) + 1 
     return counts.items()
  
 
