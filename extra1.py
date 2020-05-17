@@ -73,10 +73,10 @@ def processpop(pid,records):
  
 
 if __name__=='__main__':
-    output=sys.argv[1]
-    fn = 'hdfs:///tmp/bdm/tweets-100m.csv' if len(sys.argv)<2 else sys.argv[1]
+    output=sys.argv[2]
+    tweetdata=sys.argv[1]
     sc = SparkContext()
-    tweet = sc.textFile(fn).cache()
+    tweet = sc.textFile(tweetdata).cache()
     counts = tweet.mapPartitionsWithIndex(processpop) \
             .reduceByKey(lambda x,y: x+y)\
              .map(lambda x:(x[0][0],x[1]/x[0][1])).saveAsTextFile(output)
