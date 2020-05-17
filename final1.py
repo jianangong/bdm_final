@@ -6,7 +6,7 @@ from pyspark.sql.session import SparkSession
 from pyspark import SparkContext
 import sys
 
-def processsStreet(pid,records):
+def processStreet(pid,records):
     import csv
     import re
     
