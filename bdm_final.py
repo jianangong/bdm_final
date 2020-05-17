@@ -138,12 +138,13 @@ if __name__ == "__main__":
          viola.is_left == stre.is_left, 
          (viola.house_number >= stre.low) & (viola.house_number <= stre.high)]
 
-    
-    vio_stre= stre.join(viola, filtering1, how='left').groupBy([stre.physicalID, viola.year]).count()
-    vio_stre2= stre.join(viola, filtering2, how='left').groupBy([stre.physicalID, viola.year]).count()
-    
-    totalfinal=vio_stre.rdd.union(vio_stre2.rdd)
-    print(totalfinal.count())
+    v1= stre.join(viola, filtering1, how='left')
+    v2=stre.join(viola, filtering2, how='left')
+#     vio_stre= stre.join(viola, filtering1, how='left').groupBy([stre.physicalID, viola.year]).count()
+#     vio_stre2= stre.join(viola, filtering2, how='left').groupBy([stre.physicalID, viola.year]).count()
+    tt=v1.rdd.union(v2.rdd)
+#     totalfinal=vio_stre.rdd.union(vio_stre2.rdd)
+    print(tt.count())
 #     totalfinal.map(lambda x: ((x[0], x[1]), x[2])) \
 #             .mapPartitions(breaktoyear) \
 #             .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4])) \
