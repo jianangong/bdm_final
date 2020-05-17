@@ -126,20 +126,27 @@ if __name__ == "__main__":
     street1=sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv').mapPartitionsWithIndex(processStreet)
     violation = sc.textFile('hdfs:///tmp/bdm/nyc_parking_violation/').mapPartitionsWithIndex(processViolation)     
 
-    stre = spark.createDataFrame(street1, ('pysicalID', 'street','st_label' ,'boro', 'low', 'high', 'is_left'))
+    stre = spark.createDataFrame(street1, ('physicalID', 'street','st_label' ,'boro', 'low', 'high', 'is_left'))
     viola = spark.createDataFrame(violation, ('year', 'street', 'boro', 'house_number', 'is_left'))
     
-    filtering = [viola.boro == stre.boro, 
-         (viola.street == stre.street),#|(viola.street == stre.st_label), 
+    filtering1 = [viola.boro == stre.boro, 
+         viola.street == stre.street, 
          viola.is_left == stre.is_left, 
          (viola.house_number >= stre.low) & (viola.house_number <= stre.high)]
+    filtering2 = [viola.boro == stre.boro, 
+         viola.street == stre.st_label, 
+         viola.is_left == stre.is_left, 
+         (viola.house_number >= stre.low) & (viola.house_number <= stre.high)]
+
     
-    vio_stre= stre.join(viola, filtering, how='left').groupBy([stre.pysicalID, viola.year]).count()
+    vio_stre= stre.join(viola, filtering1, how='left').groupBy([stre.physicalID, viola.year]).count()
+    vio_stre2= stre.join(viola, filtering2, how='left').groupBy([stre.physicalID, viola.year]).count()
     
-    vio_stre.rdd.map(lambda x: ((x[0], x[1]), x[2])) \
+    totalfinal=vio_stre.rdd.union(vio_stre2.rdd)
+    totalfinal.rdd.map(lambda x: ((x[0], x[1]), x[2])) \
             .mapPartitions(breaktoyear) \
             .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4])) \
             .sortByKey() \
-            .mapValues(lambda y: y + (coef_ols(y=list(y)),)) \
+            .mapValues(lambda x: x + (coef_ols(y=list(x)),)) \
             .map(lambda x: ((x[0],) + x[1]))\
             .saveAsTextFile(output)
