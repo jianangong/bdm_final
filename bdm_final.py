@@ -64,9 +64,13 @@ def processViolation(pid,records):
         if year not in ['2015','2016','2017','2018','2019']:
             continue
         street=row[24].lower()
-        boro=borocode[row[21]]
-        number=row[23]
         
+        if row[21] in borocode.keys():
+            boro = borocode[row[21]]
+        else:
+            continue
+        
+        number=row[23]
         if bool(re.search('[a-zA-Z]', number)):
             continue
         elif number.isdigit():
