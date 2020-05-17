@@ -72,11 +72,16 @@ def processViolation(pid,records):
         elif number.isdigit():
             houseno=float(number)
             is_left=houseno%2
-        elif '-' in number:
-            first, houseno = row[23].split('-')
-            houseno = str(int(houseno))
-            is_left=float(houseno)%2
-            houseno=float(first+'.'+houseno)
+        else:
+            try:
+                first, houseno = row[23].split('-')
+                houseno = str(int(houseno))
+                is_left=float(houseno)%2
+                houseno=float(first+'.'+houseno)
+
+            except:
+                continue
+        
 
 
         yield (year,street,boro,houseno,is_left)
