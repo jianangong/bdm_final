@@ -11,6 +11,7 @@ from pyspark import SparkContext
 
 
 tweetdata=sys.argv[1]
+print(argv[1])
 
 def getdict():
     import csv
@@ -24,7 +25,7 @@ def getdict():
         reader = csv.reader(file)
         for row in reader:
             keyword.append(row[0])
-    with open(tweetdata) as file:
+    with open('tweets-100m.csv') as file:
         reader = csv.reader(file,delimiter='|')      
         for row in reader:
             if len(row) < 7:
