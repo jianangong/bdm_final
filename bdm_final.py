@@ -143,10 +143,11 @@ if __name__ == "__main__":
     vio_stre2= stre.join(viola, filtering2, how='left').groupBy([stre.physicalID, viola.year]).count()
     
     totalfinal=vio_stre.rdd.union(vio_stre2.rdd)
-    totalfinal.map(lambda x: ((x[0], x[1]), x[2])) \
-            .mapPartitions(breaktoyear) \
-            .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4])) \
-            .sortByKey() \
-            .mapValues(lambda x: x + (coef_ols(y=list(x)),)) \
-            .map(lambda x: ((x[0],) + x[1]))\
-            .saveAsTextFile(output)
+    print(totalfinal.count())
+#     totalfinal.map(lambda x: ((x[0], x[1]), x[2])) \
+#             .mapPartitions(breaktoyear) \
+#             .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4])) \
+#             .sortByKey() \
+#             .mapValues(lambda x: x + (coef_ols(y=list(x)),)) \
+#             .map(lambda x: ((x[0],) + x[1]))\
+#             .saveAsTextFile(output)
