@@ -2,6 +2,8 @@ import fiona
 import fiona.crs
 import shapely
 import rtree
+import pyproj
+import shapely.geometry as geom
 import sys
 import pandas as pd
 import geopandas as gpd
