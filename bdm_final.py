@@ -130,7 +130,7 @@ if __name__ == "__main__":
     viola = spark.createDataFrame(violation, ('year', 'street', 'boro', 'house_number', 'is_left'))
     
     filtering = [viola.boro == stre.boro, 
-         (viola.street == stre.street)|(viola.street == stre.st_label), 
+         #(viola.street == stre.street)|(viola.street == stre.st_label), 
          viola.is_left == stre.is_left, 
          (viola.house_number >= stre.low) & (viola.house_number <= stre.high)]
     
