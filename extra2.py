@@ -1,20 +1,15 @@
-def createIndex(geojson):
-    '''
-    This function takes in a shapefile path, and return:
-    (1) index: an R-Tree based on the geometry data in the file
-    (2) zones: the original data of the shapefile
-    
-    Note that the ID used in the R-tree 'index' is the same as
-    the order of the object in zones.
-    '''
-    import rtree
-    import fiona.crs
-    import geopandas as gpd
-    zones = gpd.read_file(geojson).to_crs(fiona.crs.from_epsg(2263))
-    index = rtree.Rtree()
-    for idx,geometry in enumerate(zones.geometry):
-        index.insert(idx, geometry.bounds)
-    return (index, zones)
+import fiona
+import fiona.crs
+import shapely
+import rtree
+import pyproj
+import shapely.geometry as geom
+import sys
+import pandas as pd
+import geopandas as gpd
+from pyspark import SparkContext
+
+
     
     
 def getdict():
