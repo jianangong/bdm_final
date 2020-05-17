@@ -51,12 +51,6 @@ def getdict():
     
 def processwords(pid,records):
     import csv
-    import pyproj
-    import shapely.geometry as geom
-    proj = pyproj.Proj(init='epsg:2263',preserve_units=True)
-   
-    indexr,tract=createindex('500cities_tracts.geojson')
-    
     worddict=getdict()
     keyword=[]
     counts={}
