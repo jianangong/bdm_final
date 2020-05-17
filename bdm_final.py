@@ -115,7 +115,7 @@ if __name__ == "__main__":
     spark = SparkSession(sc)
     
     street1=sc.textFile('hdfs:///tmp/bdm/nyc_cscl.csv').mapPartitionsWithIndex(processStreet)
-    violations = sc.textFile('hdfs:///tmp/bdm/nyc_parking_violation/').mapPartitionsWithIndex(processViolation)     
+    violation = sc.textFile('hdfs:///tmp/bdm/nyc_parking_violation/').mapPartitionsWithIndex(processViolation)     
 
     stre = spark.createDataFrame(street1, ('pysicalID', 'street','st_label' ,'boro', 'low', 'high', 'is_left'))
     viola = spark.createDataFrame(violation, ('year', 'street', 'boro', 'house_number', 'is_left'))
